@@ -54,7 +54,9 @@ At this point, you can run this application. It creates its own file to upload a
 Navigate to the base directory of the repository and run with the following command and arguments.
 
 ### Command
+```cmd
 dotnet run --project .\storage-blob-dotnet-parallel-putblobs\storage-blob-dotnet-parallel-putblobs.csproj
+```
 
 ### Arguments
 - `arg0: Blob Size` (Default: 8192)
