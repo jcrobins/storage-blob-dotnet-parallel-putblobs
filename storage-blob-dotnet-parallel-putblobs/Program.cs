@@ -248,7 +248,6 @@ namespace Sample_HighRatePutBlob
                     string blobName = blobPrefix + nScheduledOperations;
 
                     CloudBlockBlob blockBlob = container.GetBlockBlobReference(blobName);
-                    //CloudBlockBlob blockBlob = new CloudBlockBlob(new Uri(container.Uri.ToString().Replace(".net", ".net:1443") + "/" + blobName), blobClient.Credentials);
 
                     await semaphore.WaitAsync();
 
