@@ -62,65 +62,6 @@ namespace Sample_HighRatePutBlob
         private static ulong nScheduledOperations = 0;
         private static ulong nCompleteOperations = 0;
 
-        static async Task DeleteAllContainers(CloudBlobClient blobClient)
-        {
-            BlobContinuationToken continuationToken = null;
-            do
-            {
-                ContainerResultSegment resultSegment = await blobClient.ListContainersSegmentedAsync(continuationToken);
-
-                //List<Task> deletionTasks = new List<Task>();
-                Console.WriteLine($"Deleting {resultSegment.Results.Count()} containers from account '{blobClient.Credentials.AccountName}'.");
-
-                foreach (CloudBlobContainer container in resultSegment.Results)
-                {
-                    await container.DeleteAsync();
-                    Console.WriteLine($"Deleted container {container.Name}.");
-                    //deletionTasks.Add(container.DeleteAsync().ContinueWith((t)=> { Console.WriteLine($"Deleted."); }));
-                }
-
-                //await Task.WhenAll(deletionTasks);
-
-                continuationToken = resultSegment.ContinuationToken;
-
-            } while (continuationToken != null);
-        }
-
-        static async Task GetSize(CloudBlobClient blobClient)
-        {
-            Console.WriteLine("Fetching total size.");
-            long totalSize = 0;
-            BlobContinuationToken continuationToken = null;
-            do
-            {
-                ContainerResultSegment resultSegment = await blobClient.ListContainersSegmentedAsync(continuationToken);
-
-                foreach (CloudBlobContainer container in resultSegment.Results)
-                {
-
-                    BlobContinuationToken blobContinuationToken = null;
-                    do
-                    {
-                        BlobResultSegment blobResults = await container.ListBlobsSegmentedAsync(blobContinuationToken);
-                        foreach (CloudBlockBlob blob in blobResults.Results)
-                        {
-                            totalSize += blob.Properties.Length;
-                        }
-                        blobContinuationToken = blobResults.ContinuationToken;
-                        Console.WriteLine($"...TotalSizeSoFar = {totalSize}");
-
-                    } while (blobContinuationToken != null);
-
-                }
-
-
-                continuationToken = resultSegment.ContinuationToken;
-
-            } while (continuationToken != null);
-
-            Console.WriteLine($"Total size = {totalSize}.");
-        }
-
         static void Main(string[] args)
         {
             string containerName = $"hightpsputblob";
